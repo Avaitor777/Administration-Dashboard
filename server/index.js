@@ -14,7 +14,7 @@ import salesRoutes from "./routes/sales.js"
 dotenv.config();
 const app = express();
 app.use(express.json());  //invoked
-app,use(helmet());
+app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin"}));  //for cross-origin sharing request
 app.use(morgan("common"));
 app.use(bodyParser.json());
@@ -27,3 +27,16 @@ app.use("/client", clientRoutes);
 app.use("/general", generalRoutes);
 app.use("/management", managementRoutes);
 app.use("/sales", salesRoutes);
+
+
+//mongoos setup
+const PORT = process.env.PORT || 9000;
+ mongoose
+    .connect(process.env.MONGO_URL, {
+        useNewUrlParser: true,      //setup parameters
+        useUnifiedTopology: true,
+    })
+    .then(() => {
+        app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
+    })
+    .catch((error) => console.log(`${error} did not connect`));
